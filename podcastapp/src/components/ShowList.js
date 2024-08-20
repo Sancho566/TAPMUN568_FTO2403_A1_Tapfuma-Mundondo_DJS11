@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const SearchBar = styled.input`
   width: 100%;
   padding: 10px;
-  margin-bottom: 20px;s
+  margin-bottom: 20px;
   border-radius: 8px;
   border: 1px solid #ddd;
   font-size: 1rem;
@@ -26,7 +26,9 @@ const ShowList = () => {
         return response.json();
       })
       .then((data) => {
-        const sortedShows = data.sort((a, b) => a.name.localeCompare(b.name));
+        const sortedShows = data
+          .filter((show) => show.name) // Ensure show.name exists
+          .sort((a, b) => a.name.localeCompare(b.name));
         setShows(sortedShows);
         setIsLoading(false);
       })

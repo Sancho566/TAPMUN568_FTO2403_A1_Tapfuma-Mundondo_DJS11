@@ -1,0 +1,31 @@
+.App {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.show-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.show-card {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.show-card img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.show-card h3 {
+  margin: 10px 0;
+}
+
+.show-card p {
+  margin: 5px 0;
+}
