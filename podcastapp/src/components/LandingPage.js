@@ -1,23 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import ShowCarousel from './ShowCarousel';
+import React, { useState, useEffect } from 'react';
+import Carousel from './ShowCarousel';
 
 const LandingPage = () => {
   const [shows, setShows] = useState([]);
 
   useEffect(() => {
-    // Fetch shows data for the carousel
+    // Fetch shows or get data from an API
     fetch('https://podcast-api.netlify.app')
       .then(response => response.json())
-      .then(data => {
-        // Select a subset of shows for the carousel
-        setShows(data.slice(0, 10)); // Show the first 10 shows or modify as needed
-      });
+      .then(data => setShows(data))
+      .catch(error => console.error('Error fetching shows:', error));
   }, []);
 
   return (
     <div>
-      <h1>Recommended Shows</h1>
-      <ShowCarousel shows={shows} />
+      <Carousel shows={shows} />
     </div>
   );
 };

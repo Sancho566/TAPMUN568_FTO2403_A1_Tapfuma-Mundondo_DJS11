@@ -6,6 +6,7 @@ import ToggleButton from './components/ToggleButton';
 import ShowList from './components/ShowList';
 import Favorites from './components/FavoritesView';
 import AudioPlayer from './components/AudioPlayer';  
+import LandingPage from './components/LandingPage'; 
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faHeart, faMoon, faSun, faEnvelope } from '@fortawesome/free-solid-svg-icons';
@@ -83,9 +84,9 @@ function App() {
         <Header>
           <HeaderTitle>Podcast & Chill</HeaderTitle>
           <Nav>
-            <NavLink href="/">
+            <NavLink href="/shows">
               <FontAwesomeIcon icon={faHome} />
-              Home
+              Shows
             </NavLink>
             <NavLink href="/favorites">
               <FontAwesomeIcon icon={faHeart} />
@@ -100,7 +101,8 @@ function App() {
           />
         </Header>
         <Routes>
-          <Route path="/" element={<ShowList />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/shows" element={<ShowList />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
         <AudioPlayer /> {/* Add the AudioPlayer component */}
