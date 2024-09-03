@@ -6,37 +6,38 @@ import styled from 'styled-components';
 import Fuse from 'fuse.js';
 
 const SearchContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  margin-top: 5px;
+  display: flex; /* Aligns items in a row */
+  align-items: center; /* Vertically centers items */
+  justify-content: center; /* Centers the search bar and button */
+  margin-bottom: 20px; /* Adds space below the search container */
+  gap: 10px; /* Adds a small gap between the search input and button */
 `;
 
 const SearchBar = styled.input`
-  width: 100%;
-  margin-top: 5px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 1rem;
+  flex: 1; /* Allows the input to take up available space */
+  padding: 10px; /* Adds padding inside the input */
+  border-radius: 8px; /* Rounds the corners of the input */
+  border: 1px solid #ddd; /* Adds a border around the input */
+  font-size: 1rem; /* Sets the font size */
 `;
 
 const SearchButton = styled.button`
-  padding: 10px 20px;
-  margin-left: 100px;
-  margin-top: 5px;
-  border-radius: 8px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
+  padding: 10px 20px; /* Adds padding inside the button */
+  border-radius: 8px; /* Rounds the corners of the button */
+  border: none; /* Removes the default border */
+  background-color: #007bff; /* Sets the button color */
+  color: white; /* Sets the text color */
+  font-size: 1rem; /* Sets the font size */
+  cursor: pointer; /* Changes the cursor to a pointer on hover */
 
   &:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+    background-color: #0056b3; /* Changes background color on hover */
+    transform: scale(1.05); /* Slightly enlarges the button on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Adds a shadow on hover */
   }
 `;
+
 
 const ShowListContainer = styled.div`
   display: grid;

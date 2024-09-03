@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { lightTheme, darkTheme } from './components/tempStyles/themes';
@@ -27,7 +27,7 @@ const Footer = styled.footer`
   color: ${({ theme }) => theme.text || '#ffffff'};
   display: flex;
   justify-content: center;
-  gap: 20px; /* Space between icons */
+  gap: 20px;
   flex-direction: column;
 `;
 
@@ -72,11 +72,37 @@ function App() {
     return savedTheme ? savedTheme : 'light';
   });
 
+  const [isPlaying, setIsPlaying] = useState(false); // State to track if audio is playing
+  const audioRef = useRef(null); // Reference to the audio player
+
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
   };
+
+  const handleAudioPlay = () => {
+    setIsPlaying(true);
+  };
+
+  const handleAudioPause = () => {
+    setIsPlaying(false);
+  };
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (isPlaying) {
+        event.preventDefault();
+        event.returnValue = ''; // This triggers the confirmation dialog
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isPlaying]);
 
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
@@ -105,7 +131,11 @@ function App() {
           <Route path="/shows" element={<ShowList />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
-        <AudioPlayer /> {/* Add the AudioPlayer component */}
+        <AudioPlayer
+          ref={audioRef}
+          onPlay={handleAudioPlay}
+          onPause={handleAudioPause}
+        />
         <Footer>
           <div>
             <IconLink href="mailto:tapfumamundondo@gmail.com" aria-label="Email">

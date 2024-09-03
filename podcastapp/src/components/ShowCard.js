@@ -12,23 +12,26 @@ const Card = styled.div`
   text-align: center;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;
-  max-width: 100%;  
+  max-width: 250px;
+  margin: 15px;
   height: auto;
-  box-sizing: border-box; 
+  position: relative;
+  box-sizing: border-box;
+
   &:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
-  
-    &:hover .play-button {
+
+  &:hover .play-button {
     opacity: 1;
   }
 `;
 
 // Styled component for the show image
 const ShowImage = styled.img`
-  max-width: 100%;  // Ensure image fits within the card
-  height: auto;  // Adjust image height proportionally
+  max-width: 100%;
+  height: auto;
   border-radius: 12px;
   margin-bottom: 15px;
   transition: opacity 0.3s ease-in-out;
@@ -38,6 +41,7 @@ const ShowImage = styled.img`
   }
 `;
 
+// Styled component for the play button
 const PlayButton = styled(FontAwesomeIcon)`
   position: absolute;
   top: 50%;
@@ -77,9 +81,28 @@ const FavoriteButton = styled.button`
   color: white;
   font-size: 1rem;
   cursor: pointer;
+  margin-top: 10px;
 
   &:hover {
     background-color: #e55b4d;
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+// Styled component for the reset button
+const ResetButton = styled.button`
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #ff4d4d;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+
+  &:hover {
+    background-color: #d43a3a;
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
@@ -90,36 +113,43 @@ const ShowCard = ({ show, onCardClick }) => {
   const handleFavorite = (e) => {
     e.stopPropagation(); // Prevent click from triggering card click
 
-    // Retrieve favorites from localStorage or initialize an empty array
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
     // Toggle favorite status of the show
     if (favorites.some((fav) => fav.id === show.id)) {
-      // Remove show from favorites if already present
       favorites = favorites.filter((fav) => fav.id !== show.id);
     } else {
-      // Add show to favorites if not present
       favorites.push({ ...show, addedDate: new Date().toISOString() });
     }
 
-    // Update localStorage with the new favorites list
     localStorage.setItem('favorites', JSON.stringify(favorites));
   };
 
+  const handleResetProgress = () => {
+    // Reset all progress and favorites from localStorage
+    localStorage.removeItem('favorites');
+    alert("All your listening history has been reset.");
+  };
+
   return (
-    <Card onClick={() => onCardClick(show)}>
+    <Card onClick={onCardClick}>
       <ShowImage src={show.image} alt={show.title} />
+      <PlayButton icon={faPlayCircle} className="play-button" />
       <ShowContent>
-        <PlayButton icon={faPlayCircle} className="play-button" /> 
         <ShowTitle>{show.title}</ShowTitle>
         <ShowMeta>Seasons: {show.seasons}</ShowMeta>
-        <ShowMeta>Total Episodes: {show.episodes}</ShowMeta>
+        <ShowMeta>Genres: {show.genres}</ShowMeta>
         <ShowMeta>Last Updated: {new Date(show.updated).toLocaleDateString()}</ShowMeta>
+        {show.addedDate && <ShowMeta>Added on: {new Date(show.addedDate).toLocaleString()}</ShowMeta>}
         <FavoriteButton onClick={handleFavorite}>
           {JSON.parse(localStorage.getItem('favorites'))?.some((fav) => fav.id === show.id)
             ? 'Remove from Favorites'
             : 'Add to Favorites'}
         </FavoriteButton>
+        {/* Reset Button */}
+        <ResetButton onClick={handleResetProgress}>
+          Reset Listening History
+        </ResetButton>
       </ShowContent>
     </Card>
   );

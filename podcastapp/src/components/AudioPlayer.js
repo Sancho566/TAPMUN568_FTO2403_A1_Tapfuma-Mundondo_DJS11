@@ -1,4 +1,3 @@
-// AudioPlayer.js
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
@@ -14,6 +13,7 @@ const PlayerContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
 `;
 
 const ProgressBar = styled.input`
@@ -27,7 +27,7 @@ const TimeDisplay = styled.span`
 `;
 
 const LoadingIndicator = styled.div`
-  display: ${({ isLoading }) => (isLoading ? 'block' : 'none')};
+  display: ${({ $isLoading }) => ($isLoading ? 'block' : 'none')};
   margin: 0 10px;
   font-size: 1rem;
   color: ${({ theme }) => theme.text || '#ffffff'};
@@ -44,7 +44,7 @@ const AudioPlayer = ({ episodeTitle, audioSrc }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [volume, setVolume] = useState(1); // Volume control state
+  const [volume, setVolume] = useState(() => parseFloat(localStorage.getItem('audioVolume')) || 1);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -67,10 +67,27 @@ const AudioPlayer = ({ episodeTitle, audioSrc }) => {
   }, [currentTime, isPlaying]);
 
   useEffect(() => {
+    localStorage.setItem('audioVolume', volume);
     if (audioRef.current) {
-      setDuration(audioRef.current.duration);
+      audioRef.current.volume = volume;
     }
-  }, [audioRef.current?.duration]);
+  }, [volume]);
+
+  useEffect(() => {
+    const updateDuration = () => setDuration(audioRef.current.duration);
+
+    const audio = audioRef.current;
+    if (audio) {
+      audio.addEventListener('loadedmetadata', updateDuration);
+    }
+
+    // Cleanup function to remove event listener
+    return () => {
+      if (audio) {
+        audio.removeEventListener('loadedmetadata', updateDuration);
+      }
+    };
+  }, []); // Removed audioRef.current from the dependency array
 
   const handlePlayPause = () => {
     if (isPlaying) {
@@ -97,18 +114,13 @@ const AudioPlayer = ({ episodeTitle, audioSrc }) => {
     setIsLoading(false);
   };
 
-  const handleWaiting = () => {
-    setIsLoading(true);
-  };
+  const handleWaiting = () => setIsLoading(true);
 
-  const handleCanPlay = () => {
-    setIsLoading(false);
-  };
+  const handleCanPlay = () => setIsLoading(false);
 
   const handleVolumeChange = (event) => {
     const newVolume = event.target.value;
     setVolume(newVolume);
-    audioRef.current.volume = newVolume;
   };
 
   return (
@@ -137,7 +149,7 @@ const AudioPlayer = ({ episodeTitle, audioSrc }) => {
         onChange={handleVolumeChange}
         title="Volume"
       />
-      <LoadingIndicator isLoading={isLoading}>
+      <LoadingIndicator $isLoading={isLoading}>
         Loading...
       </LoadingIndicator>
       <audio

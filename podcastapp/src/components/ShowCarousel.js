@@ -55,7 +55,7 @@ const ShowCarousel = ({ shows, onCardClick }) => {
     <CarouselContainer>
       <Slider {...settings}>
         {shows.map((show) => (
-          <ShowCard key={show.id} onClick={() => onCardClick(show.id)}>
+          <ShowCard key={show.id} onClick={() => onCardClick}>
             <img src={show.image} alt={show.title} />
             <h3>{show.title}</h3>
           </ShowCard>
